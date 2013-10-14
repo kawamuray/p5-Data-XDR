@@ -49,12 +49,24 @@ sub new {
     my ($class, $seed) = @_;
 
     my $stream = Data::XDR::Stream->new($seed);
-    bless { stream => $stream }, $class;
+    bless {
+        stream   => $stream,
+        typedefs => {},
+    }, $class;
 }
 
 sub type {
     my ($self, $type) = @_;
-    ref $type ? $type : $self->can('XDR_'.uc($type))->();
+    if (ref $type) {
+        return $type;
+    } else {
+        return $self->{typedefs}{$type} || $self->can('XDR_'.uc($type))->();
+    }
+}
+
+sub typedef {
+    my ($self, $ident, $typex) = @_;
+    $self->{typedefs}{$ident} = $typex;
 }
 
 sub put {
