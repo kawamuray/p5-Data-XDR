@@ -70,16 +70,16 @@ subtest "struct" => sub {
     };
 };
 
-# subtest "union" => sub {
-#     my $buffer = pack('NN', 1, 100) . pack('NNa3x', 2, 3, 'abc');
+subtest "union" => sub {
+    is xdr_decode($xdr->XDR_UNION('u_int', {
+        1 => $xdr->XDR_U_INT,
+        2 => $xdr->XDR_STRING,
+    }) => pack 'NN', 1, 100)->{value}, 100;
 
-#     my $union = $xdr->XDR_union($xdr->XDR_U_INT, {
-#         1 => $xdr->XDR_U_INT,
-#         2 => $xdr->XDR_STRING,
-#     });
-
-#     is $union->unpack(\$buffer), 100;
-#     is $union->unpack(\$buffer), 'abc';
-# };
+    is xdr_decode($xdr->XDR_UNION('u_int', {
+        1 => $xdr->XDR_U_INT,
+        2 => $xdr->XDR_STRING,
+    }) => pack 'NNa3x', 2, 3, 'abc')->{value}, 'abc';
+};
 
 done_testing;

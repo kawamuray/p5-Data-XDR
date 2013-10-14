@@ -79,16 +79,17 @@ subtest "struct" => sub {
     }), pack 'Nc3', 10, 3, 2, 1;
 };
 
-# subtest "union" => sub {
-#     my $xdr = Data::XDR->new;
+subtest "union" => sub {
+    my $xdr = Data::XDR->new;
+    is xdr_encode($xdr->XDR_UNION('u_int', {
+        1 => $xdr->XDR_U_INT,
+        2 => $xdr->XDR_STRING,
+    }) => { type => 1, value => 100 }), pack 'NN', 1, 100;
 
-#     my $union = $xdr->union($xdr->u_int, {
-#         1 => $xdr->u_int,
-#         2 => $xdr->string,
-#     });
-
-#     is $union->encode({ discrim => 1, value => 100 }), pack 'NN', 1, 100;
-#     is $union->encode({ discrim => 2, value => 'abc' }), pack 'NNa3x', 2, 3, 'abc';
-# };
+    is xdr_encode($xdr->XDR_UNION('u_int', {
+        1 => $xdr->XDR_U_INT,
+        2 => $xdr->XDR_STRING,
+    }) => { type => 2, value => 'abc' }), pack 'NNa3x', 2, 3, 'abc'
+};
 
 done_testing;

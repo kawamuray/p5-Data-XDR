@@ -171,7 +171,21 @@ sub XDR_STRUCT {
     };
 }
 
-# TODO: XDR_UNION
+sub XDR_UNION {
+    my ($self, $dispatch_type, $dispatch) = @_;
+    sub {
+        my ($self, $objp) = @_;
+        croak "ERROR: no such discriminent value: ".($$objp)->{type}
+            if defined $$objp && !$dispatch->{($$objp)->{type}};
+        $$objp = {} unless defined $$objp;
+        $self->type($dispatch_type)->($self, \($$objp)->{type})
+            or return;
+        return unless $dispatch->{($$objp)->{type}};
+        $self->type($dispatch->{($$objp)->{type}})->($self, \($$objp)->{value})
+            or return;
+        $$objp;
+    };
+}
 
 1;
 __END__
