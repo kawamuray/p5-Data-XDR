@@ -82,4 +82,9 @@ subtest "union" => sub {
     }) => pack 'NNa3x', 2, 3, 'abc')->{value}, 'abc';
 };
 
+subtest "pointer" => sub {
+    is ${ xdr_decode($xdr->XDR_POINTER('int') => pack 'NN', 1, 100) }, 100;
+    is ${ xdr_decode($xdr->XDR_POINTER('int') => pack 'N', 0) }, undef;
+};
+
 done_testing;

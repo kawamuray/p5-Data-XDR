@@ -92,4 +92,10 @@ subtest "union" => sub {
     }) => { type => 2, value => 'abc' }), pack 'NNa3x', 2, 3, 'abc'
 };
 
+subtest "pointer" => sub {
+    my $xdr = Data::XDR->new;
+    is xdr_encode($xdr->XDR_POINTER('int') => \100), pack 'NN', 1, 100;
+    is xdr_encode($xdr->XDR_POINTER('int') => \undef), pack 'N', 0;
+};
+
 done_testing;
