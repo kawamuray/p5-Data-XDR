@@ -71,11 +71,9 @@ sub typedef {
 
 sub put {
     my ($self, $typex, @args) = @_;
-    my $valuep = pop @args;
-    $valuep = \(my $buf = $valuep)
-        unless ref $valuep && ref $valuep eq 'SCALAR';
+    my $value = pop @args;
     local $self->{x_op} = $self->can('x_op_put');
-    $self->type($typex)->($self, $valuep, @args);
+    $self->type($typex)->($self, \$value, @args);
     # XXX: return value?
 }
 
