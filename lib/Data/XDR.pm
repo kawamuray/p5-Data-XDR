@@ -39,8 +39,8 @@ BEGIN {
 
     my $bool_packer = sub {
         my ($self, $valuep) = @_;
-        my $intp = $$valuep ? 1 : 0;
-        $self->XDR_INT->($self, \$intp);
+        $$valuep = $$valuep ? 1 : 0;
+        $self->XDR_INT->($self, $valuep);
     };
     sub XDR_BOOL { $bool_packer }
 }
