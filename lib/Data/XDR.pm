@@ -201,6 +201,7 @@ sub XDR_POINTER {
     my ($self, $rtype) = @_;
     sub {
         my ($self, $ptrp) = @_;
+        $$ptrp = \(my $tmp = $$ptrp) unless ref $$ptrp;
         my $not_null = defined $$$ptrp ? 1 : 0;
         $self->XDR_BOOL->($self, \$not_null);
         return 1 unless $not_null;

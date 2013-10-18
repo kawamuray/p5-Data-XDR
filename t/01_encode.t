@@ -96,6 +96,8 @@ subtest "pointer" => sub {
     my $xdr = Data::XDR->new;
     is xdr_encode($xdr->XDR_POINTER('int') => \100), pack 'NN', 1, 100;
     is xdr_encode($xdr->XDR_POINTER('int') => \undef), pack 'N', 0;
+    is xdr_encode($xdr->XDR_POINTER('int') => 100), pack 'NN', 1, 100;
+    is xdr_encode($xdr->XDR_POINTER('int') => undef), pack 'N', 0;
 };
 
 done_testing;
