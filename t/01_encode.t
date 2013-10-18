@@ -18,8 +18,9 @@ subtest "primitives" => sub {
     is xdr_encode(u_int => 127),    pack 'x3B*', '01111111';
     is xdr_encode(short => 127),    pack 'x1B*', '01111111';
     is xdr_encode(u_short => 127),  pack 'x1B*', '01111111';
-    # is $xdr-(>hyper(127),    pack 'x7B*', '01111111';
-    # is $xdr->u_hyper(127),  pack 'x7B*', '01111111';
+    is xdr_encode(hyper => 127),    pack 'x7B*', '01111111';
+    is xdr_encode(hyper => -127),   pack 'lscB*', ~0, ~0, ~0, '10000001';
+    is xdr_encode(u_hyper => 127),  pack 'x7B*', '01111111';
 
     # IEEE 754
     is xdr_encode(float => 3.14),  pack 'B*', '01000000010010001111010111000011';

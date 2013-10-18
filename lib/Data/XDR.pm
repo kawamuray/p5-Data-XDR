@@ -37,6 +37,26 @@ BEGIN {
         *$meth = $op;
     }
 
+    unless (eval { pack 'q', 1 }) {
+        my $quad_packer = sub {
+            my ($self, $quadp) = @_;
+            my $padding = defined $$quadp && $$quadp > 0 ? 0 : ~0;
+            $self->x_op('l<', 4, \$padding);
+            $self->x_op('l>', 4, $quadp);
+            $$quadp = abs($$quadp) * ($padding == 0 ? 1 : -1);
+            $$quadp;
+        };
+        my $u_quad_packer = sub {
+            my ($self, $u_quadp) = @_;
+            my $upbits = 0;
+            $self->x_op('l', 4, \$upbits);
+            $self->x_op('l>', 4, $u_quadp);
+        };
+        no strict 'refs';
+        no warnings 'redefine';
+        *XDR_HYPER = sub { $quad_packer };
+        *XDR_U_HYPER = sub { $u_quad_packer };
+    }
     my $bool_packer = sub {
         my ($self, $valuep) = @_;
         $$valuep = $$valuep ? 1 : 0;
