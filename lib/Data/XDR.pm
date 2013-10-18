@@ -66,13 +66,11 @@ BEGIN {
 }
 
 sub new {
-    my ($class, $seed) = @_;
-
-    my $stream = Data::XDR::Stream->new($seed);
-    bless {
-        stream   => $stream,
-        typedefs => {},
-    }, $class;
+    my ($class, @args) = @_;
+    my %args = @args > 2 ? @args : (xdrs => $args[0]);
+    $args{stream} = Data::XDR::Stream->new(delete $args{xdrs});
+    $args{typedefs} ||= {};
+    bless \%args, $class;
 }
 
 sub type {
