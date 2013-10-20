@@ -110,8 +110,8 @@ sub x_op_put {
 
 sub x_op_get {
     my ($self, $tmpl, $size, $valuep) = @_;
-    my $bytes = $self->{stream}->get_bytes($size)
-        or return;
+    my $bytes = $self->{stream}->get_bytes($size);
+    return unless defined $bytes;
     $$valuep = $tmpl ? unpack($tmpl, $bytes) : $bytes;
 }
 

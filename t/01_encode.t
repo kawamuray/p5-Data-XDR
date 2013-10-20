@@ -32,6 +32,7 @@ subtest "opaque" => sub {
 
     is xdr_encode($xdr->XDR_OPAQUE(12) => 'a'x12), 'a'x12;
     is xdr_encode($xdr->XDR_OPAQUE(10) => 'a'x10), 'a'x10 . "\0"x2;
+    is xdr_encode($xdr->XDR_OPAQUE(1) => 0), 0 . "\0"x3;
     dies_ok { xdr_encode($xdr->XDR_OPAQUE(12) => 'a'x10) };
     dies_ok { xdr_encode($xdr->XDR_OPAQUE(12) => 'a'x16) };
 

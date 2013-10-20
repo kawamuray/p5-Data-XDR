@@ -35,6 +35,7 @@ subtest "primitives" => sub {
 subtest "opaque" => sub {
     is xdr_decode($xdr->XDR_OPAQUE(12), 'a'x12), 'a'x12;
     is xdr_decode($xdr->XDR_OPAQUE(10), 'a'x10 . "\0"x2), 'a'x10;
+    is xdr_decode($xdr->XDR_OPAQUE(1), '0'."\0"x3), 0;
     # ok ! $xdr->XDR_opaque(12)->unpack('a'x16);
 
     is xdr_decode($xdr->XDR_BYTES => pack 'Na*', 12, 'a'x12), 'a'x12;
