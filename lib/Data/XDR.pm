@@ -67,7 +67,7 @@ BEGIN {
 
 sub new {
     my ($class, @args) = @_;
-    my %args = @args > 2 ? @args : (xdrs => $args[0]);
+    my %args = @args > 1 ? @args : (xdrs => $args[0]);
     $args{stream} = Data::XDR::Stream->new(delete $args{xdrs});
     $args{typedefs} ||= {};
     bless \%args, $class;
