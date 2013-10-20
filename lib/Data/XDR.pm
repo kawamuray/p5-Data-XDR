@@ -5,6 +5,9 @@ use warnings;
 use bytes ();
 use Carp;
 use Data::XDR::Stream;
+# D::X::Declare need to load after all
+# method of this module has been defined
+require Data::XDR::Declare;
 
 our $VERSION = "0.01";
 
@@ -69,23 +72,14 @@ sub new {
     my ($class, @args) = @_;
     my %args = @args > 1 ? @args : (xdrs => $args[0]);
     $args{stream} = Data::XDR::Stream->new(delete $args{xdrs});
-    $args{typedefs} ||= {};
+    $args{declare} ||= Data::XDR::Declare->new;
     bless \%args, $class;
 }
 
-sub type {
-    my ($self, $type) = @_;
-    if (ref $type) {
-        return $type;
-    } else {
-        return $self->{typedefs}{$type} || $self->can('XDR_'.uc($type))->();
-    }
-}
+sub declare { (shift)->{declare} }
 
-sub typedef {
-    my ($self, $ident, $typex) = @_;
-    $self->{typedefs}{$ident} = $typex;
-}
+# For shortcut
+sub type { (shift)->declare->type(@_) }
 
 sub put {
     my ($self, $typex, @args) = @_;
