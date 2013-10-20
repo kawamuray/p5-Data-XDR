@@ -1,5 +1,5 @@
 package Data::XDR;
-use 5.01000;
+use 5.010001;
 use strict;
 use warnings;
 use bytes ();
